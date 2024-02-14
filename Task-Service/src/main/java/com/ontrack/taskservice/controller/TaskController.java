@@ -65,7 +65,7 @@ public class TaskController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(
             @PathVariable Long id,
             @RequestBody Task task,
@@ -73,6 +73,26 @@ public class TaskController {
     ) throws Exception {
         UserDTO user = userService.getUserProfile(jwt);
         Task updatedTask = taskService.updateTask(id, task, user.getId());
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<Task> completeTask(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+
+        Task updatedTask = taskService.completeTask(id);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+
+        taskService.deleteTask(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
